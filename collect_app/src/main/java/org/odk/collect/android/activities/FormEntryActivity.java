@@ -195,6 +195,7 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
     private static final int PROGRESS_DIALOG = 1;
     private static final int SAVING_DIALOG = 2;
     private static final int SAVING_IMAGE_DIALOG = 3;
+    private static final String TAG = FormEntryActivity.class.getSimpleName();
 
     private boolean autoSaved;
     private boolean allowMovingBackwards;
@@ -696,7 +697,16 @@ public class FormEntryActivity extends CollectAbstractActivity implements Animat
                 File fi = new File(Collect.TMPFILE_PATH);
                 String instanceFolder = formController.getInstanceFile()
                         .getParent();
-                String s = instanceFolder + File.separator + System.currentTimeMillis() + ".jpg";
+                String xPath = getFormController().getXPath(getFormController().getFormIndex());
+                int titleIndex = xPath.indexOf("/", 13);
+                String title = "_"+xPath.substring(titleIndex+1).replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
+                String XpathofFirstQ = xPath.substring(0, titleIndex).concat("/Structure_ID[1]");
+                String structureID = getFormController().getQuestionPrompt(getFormController().getIndexFromXPath(XpathofFirstQ)).getAnswerText();
+                String filetitle = structureID + title;
+
+                
+                String s = instanceFolder + File.separator + filetitle + ".jpg";
+
 
                 File nf = new File(s);
                 if (!fi.renameTo(nf)) {
